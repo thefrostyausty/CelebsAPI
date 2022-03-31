@@ -44,8 +44,20 @@ router.get('/celebs', (req, res, next) => {
 		.catch(next)
 })
 
+// CREATE post /celebs
 // start a post route to put test data inside becuase we are returning an empty array
+router.post('/celebs', (req, res, next) => {
+	Celebs.create(req.body)
+	.then((celebs) =>{
 
+			console.log('this is the celebs', celebs)
+			console.log('this is the req.body', req.body.celebs)
+			// we're sending celebs in order to be created and sent as an object
+			res.status(201).json({ celebs: celebs.toObject() })
+		})
+		// if there are any errors we need to use the error handler
+		.catch(next)
+})
 
 
 
