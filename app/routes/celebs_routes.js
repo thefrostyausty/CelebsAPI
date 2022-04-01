@@ -30,13 +30,15 @@ const router = express.Router()
 // INDEX
 // GET /examples
 router.get('/celebs', (req, res, next) => {
-	Celebs.find({})
+	Celebs.find()
 		.then((celebs) => {
-			// `examples` will be an array of Mongoose documents
-			// we want to convert each one to a POJO, so we use `.map` to
+			// `celebs` will be an array of Mongoose documents
+			// we want to convert each one to a javascript object, so we use `.map` to
 			// apply `.toObject` to each one
-			// return celebs.map((celebs) => celebs.toObject())
-            return celebs
+			// .map returns a new array
+			// there is no body in POSTMAN for an INDEX route
+			return celebs.map((celebs) => celebs.toObject())
+            // return celebs
 		})
 		// respond with status 200 and JSON of the examples
 		.then((celebs) => res.status(200).json({ celebs: celebs }))
@@ -47,13 +49,13 @@ router.get('/celebs', (req, res, next) => {
 // CREATE post /celebs
 // start a post route to put test data inside becuase we are returning an empty array
 router.post('/celebs', (req, res, next) => {
-	Celebs.create(req.body)
+	Celebs.create(req.body.celebs)
 	.then((celebs) =>{
 
 			console.log('this is the celebs', celebs)
 			console.log('this is the req.body', req.body)
 			// we're sending celebs in order to be created and sent as an object
-			res.status(201).json({ celebs })
+			res.status(201).json({ celebs: celebs.toObject() })
 		})
 		// if there are any errors we need to use the error handler
 		.catch(next)
@@ -61,9 +63,16 @@ router.post('/celebs', (req, res, next) => {
 
 // show individual celeb route and use via postman
 
-
+// GET celebs/62462a20a24cc80fa983cfec
 router.get('/celebs/:id', (req, res, next) =>{
+	// we get the id from req.params.id -> :id
 	Celebs.findById(req.params.id)
+		// if celebs aren't found we will send that custom error
+		.then(handle404)
+		// if successful respond with an object as json
+		.then(celebs => res.status(200).json({ celebs: celebs.toObject() }))
+		// if not we will send the error handler
+		.catch(next)
 
 })
 
