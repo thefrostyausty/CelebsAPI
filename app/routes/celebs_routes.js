@@ -51,18 +51,21 @@ router.post('/celebs', (req, res, next) => {
 	.then((celebs) =>{
 
 			console.log('this is the celebs', celebs)
-			console.log('this is the req.body', req.body.celebs)
+			console.log('this is the req.body', req.body)
 			// we're sending celebs in order to be created and sent as an object
-			res.status(201).json({ celebs: celebs.toObject() })
+			res.status(201).json({ celebs })
 		})
 		// if there are any errors we need to use the error handler
 		.catch(next)
 })
 
+// show individual celeb route and use via postman
 
 
+router.get('/celebs/:id', (req, res, next) =>{
+	Celebs.findById(req.params.id)
 
-
+})
 
 
 
