@@ -76,7 +76,17 @@ router.get('/celebs/:id', (req, res, next) =>{
 
 })
 
-
+// delete /celebs/62462a20a24cc80fa983cfec
+router.delete('/celebs/:id', (req, res, next) =>{
+	Celebs.findById(req.params.id)
+	// use the handle404 midddleware
+		.then(handle404)
+	// find the celebs id and delete
+		.then( celebs => { celebs.findByIdAndDelete})
+	// send back a 204 no content status
+		.then(() => res.sendStatus(204))
+		.catch(next)
+})
 
 
 
