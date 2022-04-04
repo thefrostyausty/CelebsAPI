@@ -63,7 +63,7 @@ router.post('/celebs', (req, res, next) => {
 
 // show individual celeb route and use via postman
 
-// GET celebs/62462a20a24cc80fa983cfec
+// GET /celebs/62462a20a24cc80fa983cfec
 router.get('/celebs/:id', (req, res, next) =>{
 	// we get the id from req.params.id -> :id
 	Celebs.findById(req.params.id)
@@ -74,6 +74,23 @@ router.get('/celebs/:id', (req, res, next) =>{
 		// if not we will send the error handler
 		.catch(next)
 
+})
+
+// update route
+// PATCH /celebs/62462a20a24cc80fa983cfec
+router.patch('/celebs/:id', removeBlanks, (req, res, next) => {
+	// we want to get the id from req.params.id -> :id
+	Celebs.findById(req.params.id)
+	// if there are no celebs found we can send a the custom error handler
+	.then(handle404)
+	// we want to then update the body of the celeb we're editing
+	.then((celebs) => {
+		return celebs.updateOne(req.body.celebs)
+		// console.log('this is the req boy', req.body.celebs)
+	})
+	// send a 204 status when the update is successful
+	.then(res.sendStatus(204))
+	.catch(next)
 })
 
 // delete /celebs/62462a20a24cc80fa983cfec
