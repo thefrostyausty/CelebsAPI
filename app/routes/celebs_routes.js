@@ -82,7 +82,7 @@ router.delete('/celebs/:id', (req, res, next) =>{
 	// use the handle404 midddleware
 		.then(handle404)
 	// find the celebs id and delete
-		.then( celebs => { celebs.findByIdAndDelete})
+		.then( celebs => { celebs.deleteOne()})
 	// send back a 204 no content status
 		.then(() => res.sendStatus(204))
 		.catch(next)
